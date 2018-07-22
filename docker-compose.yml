@@ -3,17 +3,23 @@ services:
   zookeeper:
     image: mocchi/fedora-kafka:latest
     command: '/root/kafka_2.12-1.1.1/bin/zookeeper-server-start.sh /root/kafka_2.12-1.1.1/config/zookeeper.properties'
-  kafka:
+  kafka1:
     image: mocchi/fedora-kafka:latest
     depends_on:
       - 'zookeeper'
-    command: sh -c 'python /root/wait_for_tcp.py zookeeper 2181 60 && cd /root/kafka_2.12-1.1.1/ && sed -i s/localhost/zookeeper/ config/server.properties && echo -e "\nlisteners=PLAINTEXT://kafka:9092" >> config/server.properties && sed -i s/broker.id=0/broker.id=1/ config/server.properties && bin/kafka-server-start.sh config/server.properties'
+    command: sh -c 'python /root/wait_for_tcp.py zookeeper 2181 60 && cd /root/kafka_2.12-1.1.1/ && sed -i s/localhost/zookeeper/ config/server.properties && echo -e "\nlisteners=PLAINTEXT://kafka1:9092" >> config/server.properties && sed -i s/broker.id=0/broker.id=1/ config/server.properties && bin/kafka-server-start.sh config/server.properties'
+  kafka2:
+    image: mocchi/fedora-kafka:latest
+    depends_on:
+      - 'zookeeper'
+    command: sh -c 'python /root/wait_for_tcp.py zookeeper 2181 60 && cd /root/kafka_2.12-1.1.1/ && sed -i s/localhost/zookeeper/ config/server.properties && echo -e "\nlisteners=PLAINTEXT://kafka2:9092" >> config/server.properties && sed -i s/broker.id=0/broker.id=2/ config/server.properties && bin/kafka-server-start.sh config/server.properties'
   kafka-chat:
     image: fedora:28
     ports:
       - '8080:8080'
     depends_on:
-      - 'kafka'
+      - 'kafka1'
+      - 'kafka2'
     volumes:
       - './:/root/chat'
     command: sh /root/chat/bin/dev.sh

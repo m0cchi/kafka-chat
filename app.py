@@ -6,8 +6,8 @@ from kafka import KafkaConsumer, KafkaProducer
 
 users = set()
 
-producer = KafkaProducer(bootstrap_servers='kafka:9092')
-consumer = KafkaConsumer('chat', bootstrap_servers='kafka:9092')
+producer = KafkaProducer(bootstrap_servers='kafka1:9092')
+consumer = KafkaConsumer('chat', bootstrap_servers='kafka2:9092')
 
 def receive_messages():
     for msg in consumer:

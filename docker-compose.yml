@@ -23,6 +23,8 @@ services:
     volumes:
       - './bin:/root/bin'
     command: 'sh /root/bin/run_kafka.sh'
+  kafka-chat-cache:
+    image: redis:4
   gyazo-server:
     build:
       context: ./
@@ -48,6 +50,7 @@ services:
     depends_on:
       - 'kafka1'
       - 'kafka2'
+      - 'kafka-chat-cache'
     volumes:
       - './:/root/chat'
     command: sh /root/chat/bin/dev.sh

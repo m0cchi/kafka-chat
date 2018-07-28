@@ -9,6 +9,7 @@ bottle = "*"
 bottle-websocket = "*"
 gevent = "*"
 gevent-websocket = "*"
+redis = "*"
 
 [dev-packages]
 

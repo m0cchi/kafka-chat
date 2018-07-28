@@ -24,7 +24,10 @@ services:
       - './bin:/root/bin'
     command: 'sh /root/bin/run_kafka.sh'
   kafka-chat:
-    image: fedora:28
+    build:
+      context: ./
+      dockerfile: ./extra/container/kafka_chat.Dockerfile 
+    image: mocchi/kafka_chat
     ports:
       - '8080:8080'
     depends_on:

@@ -23,6 +23,21 @@ services:
     volumes:
       - './bin:/root/bin'
     command: 'sh /root/bin/run_kafka.sh'
+  gyazo-server:
+    build:
+      context: ./
+      dockerfile: ./extra/container/gyazo.Dockerfile
+    image: mocchi/gyazo
+    environment:
+      KAFKA_HOST: 'kafka1:9092'
+      OREOREGYAZO_DEBUG: 'false'
+      OREOREGYAZO_ALLOW_CORS_HOST: 'localhost:8080'
+      WAIT_HOST: 'kafka1'
+      WAIT_PORT: 9092
+    ports:
+      - '3000:3000'
+    depends_on:
+      - 'kafka1'
   kafka-chat:
     build:
       context: ./

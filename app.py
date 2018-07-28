@@ -1,4 +1,4 @@
-from bottle import route, run, static_file, get
+from bottle import route, run, static_file
 from bottle.ext.websocket import GeventWebSocketServer
 from bottle.ext.websocket import websocket
 import threading
@@ -8,17 +8,14 @@ import redis
 users = set()
 
 producer = KafkaProducer(bootstrap_servers='kafka1:9092')
-#uncommit_consumer = KafkaConsumer('chat', auto_offset_reset='earliest', enable_auto_commit=False, bootstrap_servers='kafka1:9092')
 msg_consumer = KafkaConsumer('chat', bootstrap_servers='kafka2:9092')
 img_consumer = KafkaConsumer('image', bootstrap_servers='kafka2:9092')
 pool = redis.ConnectionPool(host='kafka-chat-cache', port=6379, db=0)
 redis_c = redis.StrictRedis(connection_pool=pool)
 
 def send_all_message(user):
-    print('send all')
     for msg in redis_c.lrange('chat', 0, 100):
         user.send(msg.decode('utf-8'))
-    print('-------end')
 
 def send_message():
     for msg in msg_consumer:
@@ -42,7 +39,7 @@ def index():
 def statics(filename):
     return static_file(filename, root='./statics')
 
-@get('/chat', apply=[websocket])
+@route('/chat', apply=[websocket])
 def chat(ws):
     users.add(ws)
     send_all_message(ws)

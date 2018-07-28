@@ -2,8 +2,19 @@ $(document).ready(function() {
     var messageForm = $('#form .message');
     var timeline = $('#timeline .messages');
     function addMessage(date, text) {
-        let messageLine = $('<li/>')
-        messageLine.text(date.toUTCString() + ': ' + text);
+        let messageLine = $('<div/>')
+        let field = $('<div/>');
+        if(text.toLowerCase().match(/^http.*(png|jpeg|jpg|gif)$/)) {
+            field.text(date.toUTCString() + ': ');
+            messageLine.append(field);
+            let img = $('<img/>');
+            img.attr('src', text);
+            messageLine.append(img);
+        } else {
+            field.text(date.toUTCString() + ': ' + text);
+            messageLine.append(field);
+        }
+
         timeline.prepend(messageLine);
     }
 
